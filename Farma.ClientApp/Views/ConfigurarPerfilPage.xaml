@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:farmaClientApp.ViewModels"
+             x:Class="farmaClientApp.Views.ConfigurarPerfilPage"
+             x:DataType="viewmodels:ConfigurarPerfilViewModel"
+             Title="Mi Perfil"
+             BackgroundColor="{StaticResource Secondary}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:ConfigurarPerfilViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+            
+            <!-- Header -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeThickness="0"
+                    Padding="20,30,20,25">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Configurar Perfil"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="24"
+                           TextColor="{StaticResource White}" />
+                    
+                    <Label Text="Actualiza tu información personal y de entrega"
+                           FontFamily="OpenSansRegular"
+                           FontSize="14"
+                           TextColor="{StaticResource White}"
+                           Opacity="0.9" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Contenido -->
+            <VerticalStackLayout Padding="20" Spacing="25">
+
+                <!-- Información Personal -->
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Información Personal"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="18"
+                           TextColor="{StaticResource Gray800}" />
+
+                    <Border BackgroundColor="{StaticResource White}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 15"
+                            Padding="20">
+                        <VerticalStackLayout Spacing="15">
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Nombre Completo *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding Nombre}" Placeholder="Ingrese su nombre completo" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Email *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding Email}" Placeholder="su@email.com" Keyboard="Email" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Teléfono" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding Telefono}" Placeholder="11-1234-5678" Keyboard="Telephone" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Dirección de Entrega -->
+                <VerticalStackLayout Spacing="15">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="Dirección de Entrega"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="18"
+                               TextColor="{StaticResource Gray800}"
+                               VerticalOptions="Center" />
+                        <Button Text="📍 Ubicación"
+                                Command="{Binding ObtenerUbicacionCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="12"
+                                Padding="8,4" />
+                    </HorizontalStackLayout>
+
+                    <Border BackgroundColor="{StaticResource White}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 15"
+                            Padding="20">
+                        <VerticalStackLayout Spacing="15">
+                            
+                            <Grid ColumnDefinitions="2*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Calle *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding Calle}" Placeholder="Av. Corrientes" />
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Altura *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding Altura}" Placeholder="1234" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Piso" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding Piso}" Placeholder="5" />
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="Departamento" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding Departamento}" Placeholder="A" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            
+                            <Grid ColumnDefinitions="2*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="8">
+                                    <Label Text="Localidad *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding Localidad}" Placeholder="CABA" />
+                                </VerticalStackLayout>
+                                
+                                <VerticalStackLayout Grid.Column="1" Spacing="8">
+                                    <Label Text="CP" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                    <Entry Text="{Binding CodigoPostal}" Placeholder="1043" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Provincia *" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding Provincia}" Placeholder="Buenos Aires" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Obra Social / Prepaga -->
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Obra Social / Prepaga (Opcional)"
+                           FontFamily="OpenSansSemibold"
+                           FontSize="18"
+                           TextColor="{StaticResource Gray800}" />
+
+                    <Border BackgroundColor="{StaticResource White}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 15"
+                            Padding="20">
+                        <VerticalStackLayout Spacing="15">
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Nombre de la Obra Social" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding ObraSocialNombre}" Placeholder="Ej: OSDE, Swiss Medical, PAMI" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Número de Asociado" FontSize="14" FontFamily="OpenSansSemibold" TextColor="{StaticResource Gray700}" />
+                                <Entry Text="{Binding ObraSocialNumero}" Placeholder="123456789" Keyboard="Numeric" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Información importante -->
+                <Border BackgroundColor="{StaticResource MedicalBlue}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15"
+                        Margin="0,10,0,0">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="ℹ️" FontSize="20" VerticalOptions="Center" />
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="Información Importante"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="14"
+                                   TextColor="{StaticResource White}" />
+                            <Label Text="La dirección será utilizada para la entrega de medicamentos"
+                                   FontSize="12"
+                                   TextColor="{StaticResource White}"
+                                   Opacity="0.9" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Botón guardar -->
+                <Button Text="Guardar Cambios"
+                        Command="{Binding GuardarCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource White}"
+                        FontFamily="OpenSansSemibold"
+                        FontSize="18"
+                        CornerRadius="15"
+                        HeightRequest="55"
+                        Margin="0,20,0,0">
+                    <Button.Shadow>
+                        <Shadow Brush="{StaticResource Primary}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                    </Button.Shadow>
+                </Button>
+
+                <!-- Indicador de carga -->
+                <ActivityIndicator IsVisible="{Binding IsLoading}"
+                                   IsRunning="{Binding IsLoading}"
+                                   Color="{StaticResource Primary}"
+                                   HeightRequest="40"
+                                   Margin="0,20,0,0" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

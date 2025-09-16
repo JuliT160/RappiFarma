@@ -1,0 +1,74 @@
+@inherits LayoutComponentBase
+@inject Farma.FarmaciaApp.Services.PharmacyAuthState AuthState
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<MudLayout>
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+        <MudAppBar Color="Color.Primary" Elevation="0">
+            @if (AuthState.IsAuthenticated)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+            }
+            <MudText Typo="Typo.h6" Class="text-white">RappiFarma · Portal de Farmacias</MudText>
+            <MudSpacer />
+            @if (AuthState.IsAuthenticated && AuthState.Current is { } profile)
+            {
+                <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="2" Class="mud-width-full mud-justify-end">
+                    <MudStack Spacing="1">
+                        <MudText Typo="Typo.subtitle2" Class="text-white">@profile.Nombre</MudText>
+                        <MudText Typo="Typo.caption" Class="text-white-70">Radio de cobertura: @profile.RadioCoberturaKm:F1 km</MudText>
+                    </MudStack>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout" OnClick="Logout">
+                        Cerrar sesión
+                    </MudButton>
+                </MudStack>
+            }
+        </MudAppBar>
+
+        @if (AuthState.IsAuthenticated)
+        {
+            <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Responsive" Elevation="1">
+                <NavMenu />
+            </MudDrawer>
+        }
+
+        <MudMainContent Class="main-content">
+            <MudContainer MaxWidth="MaxWidth.Large" Class="py-6 px-4">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+
+    protected override void OnInitialized()
+    {
+        _drawerOpen = AuthState.IsAuthenticated;
+        AuthState.OnChange += HandleAuthStateChanged;
+    }
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void Logout()
+    {
+        AuthState.Logout();
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+
+    private void HandleAuthStateChanged()
+    {
+        _drawerOpen = AuthState.IsAuthenticated;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        AuthState.OnChange -= HandleAuthStateChanged;
+    }
+}

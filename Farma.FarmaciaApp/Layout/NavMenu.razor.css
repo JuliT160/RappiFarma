@@ -1,0 +1,19 @@
+.mud-drawer-header {
+    padding: 1.5rem 1.25rem 1rem 1.25rem;
+    background: linear-gradient(180deg, rgba(255, 232, 220, 0.6) 0%, rgba(255, 255, 255, 0.9) 100%);
+}
+
+.mud-nav-menu {
+    padding: 0.5rem 0;
+}
+
+.mud-nav-link {
+    border-radius: 12px;
+    margin: 0.25rem 0.75rem;
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+}
+
+.mud-nav-link .mud-badge {
+    margin-left: auto;
+}

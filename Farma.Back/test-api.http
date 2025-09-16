@@ -1,0 +1,90 @@
+### Variables
+@baseUrl = https://localhost:7097
+@basicAuth = Basic YWRtaW46YWRtaW4xMjM=
+@bearerToken = Bearer farma-api-key-2024
+
+### 1. Health Check
+GET {{baseUrl}}/
+
+### 2. Test Basic Auth
+POST {{baseUrl}}/auth/basic-test
+Authorization: {{basicAuth}}
+
+### 3. Test Bearer Auth
+POST {{baseUrl}}/auth/basic-test
+Authorization: {{bearerToken}}
+
+### 4. Get all farmacias
+GET {{baseUrl}}/farmacias
+Authorization: {{bearerToken}}
+
+### 5. Get farmacias cercanas (with coordinates)
+GET {{baseUrl}}/farmacias/cercanas?lat=-34.6037&lng=-58.3816&radio=10&limite=5
+Authorization: {{bearerToken}}
+
+### 6. Get farmacias cercanas (fallback by location)
+GET {{baseUrl}}/farmacias/cercanas?localidad=Buenos Aires&provincia=Buenos Aires
+Authorization: {{bearerToken}}
+
+### 7. Get all pedidos
+GET {{baseUrl}}/pedidos
+Authorization: {{bearerToken}}
+
+### 8. Get pedidos by estado
+GET {{baseUrl}}/pedidos?estado=EN_COTIZACION
+Authorization: {{bearerToken}}
+
+### 9. Create receta (multipart form - example structure)
+# POST {{baseUrl}}/recetas
+# Authorization: {{bearerToken}}
+# Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+# 
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="archivo"; filename="receta.pdf"
+# Content-Type: application/pdf
+# 
+# [Binary file content here]
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="calle"
+# 
+# Av. Corrientes
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="altura"
+# 
+# 1234
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="localidad"
+# 
+# Buenos Aires
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="provincia"
+# 
+# Buenos Aires
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="codigoPostal"
+# 
+# 1043
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="lat"
+# 
+# -34.6037
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="lon"
+# 
+# -58.3816
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW
+# Content-Disposition: form-data; name="usuarioId"
+# 
+# 1
+# ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 10. Get specific pedido (after creating one)
+# GET {{baseUrl}}/pedidos/1
+# Authorization: {{bearerToken}}
+
+### 11. Cancel pedido (after creating one)
+# POST {{baseUrl}}/pedidos/1/cancelar
+# Authorization: {{bearerToken}}
+
+### Test without auth (should fail)
+GET {{baseUrl}}/farmacias

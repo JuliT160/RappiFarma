@@ -1,0 +1,266 @@
+@page "/pedidos/activos"
+@using Farma.FarmaciaApp
+@using Farma.FarmaciaApp.Helpers
+@using Farma.FarmaciaApp.Models
+@using Farma.FarmaciaApp.Services
+@using Farma.Shared
+@using Farma.Shared.Enums
+@using Farma.Shared.Utils
+@using MudBlazor
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject PharmacyAuthState AuthState
+@inject PedidosService PedidosService
+
+@implements IDisposable
+
+<!-- Header mejorado -->
+<MudPaper Elevation="0" Class="pa-6 mb-4" Style="background: linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%); border-radius: 20px;">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudStack Spacing="1">
+            <MudText Typo="Typo.h4" Style="color: white; font-weight: 700;">
+                📦 Mis Pedidos Activos
+            </MudText>
+            <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">
+                Seguimiento y gestión de pedidos aceptados
+            </MudText>
+        </MudStack>
+        <MudStack AlignItems="AlignItems.End">
+            <MudChip Color="Color.Surface" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Assignment">
+                @_pedidos.Count pedido@(_pedidos.Count == 1 ? "" : "s")
+            </MudChip>
+            <MudButton Variant="Variant.Text" 
+                       StartIcon="@Icons.Material.Filled.Refresh" 
+                       Style="color: white;"
+                       OnClick="LoadPedidosAsync">
+                Actualizar
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudStack AlignItems="AlignItems.Center" Class="mt-6">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        <MudText Typo="Typo.body1" Class="mt-2">Cargando pedidos…</MudText>
+    </MudStack>
+}
+else if (_pedidos.Count == 0)
+{
+    <MudPaper Elevation="0" Class="pa-8 mt-4 text-center" Style="border-radius: 20px; background: rgba(255, 245, 240, 0.5);">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3">
+            <MudAvatar Size="Size.Large" Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); width: 80px; height: 80px;">
+                <MudIcon Icon="@Icons.Material.Filled.Assignment" Size="Size.Large" Style="color: white;" />
+            </MudAvatar>
+            <MudText Typo="Typo.h5" Style="color: #FF6B35; font-weight: 600;">
+                Sin pedidos activos
+            </MudText>
+            <MudText Typo="Typo.body1" Class="text-center" Style="color: #666; max-width: 400px;">
+                Cuando aceptes y cotices un pedido, aparecerá aquí para hacer el seguimiento completo.
+            </MudText>
+            <MudButton Variant="Variant.Filled" 
+                       Color="Color.Primary" 
+                       StartIcon="@Icons.Material.Filled.Search"
+                       Href="/pedidos/disponibles"
+                       Style="border-radius: 12px; font-weight: 600; text-transform: none;">
+                🔍 Buscar Pedidos Disponibles
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <MudStack Spacing="3" Class="mt-4">
+        @foreach (var pedido in _pedidos)
+        {
+            <MudPaper Elevation="6" Class="pa-4 pedido-card">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudText Typo="Typo.h6">Pedido @pedido.NumeroPedido</MudText>
+                    <MudChip Color="@pedido.Estado.ToChipColor()" Variant="Variant.Filled" StartIcon="@pedido.Estado.ToEstadoIcon()">
+                        @pedido.Estado.ToFriendlyText()
+                    </MudChip>
+                    <MudSpacer />
+                    <MudChip Color="@(pedido.CotizacionAceptada ? Color.Success : Color.Warning)" Variant="Variant.Outlined" StartIcon="@(pedido.CotizacionAceptada ? Icons.Material.Filled.ThumbUpAlt : Icons.Material.Filled.HourglassTop)">
+                        @(pedido.CotizacionAceptada ? "Cotización aceptada" : "Esperando confirmación")
+                    </MudChip>
+                </MudStack>
+
+                <MudText Typo="Typo.caption" Class="text-secondary mt-1">
+                    Última actualización: @Farma.Shared.Utils.FormatUtils.FormatFriendlyDate(pedido.FechaActualizacion ?? pedido.FechaCreacion)
+                </MudText>
+
+                <MudProgressLinear Value="@pedido.Estado.ToProgressPercent()" Color="Color.Primary" Class="my-3" Rounded="true" />
+
+                <MudGrid GutterSize="GutterSize.Small">
+                    <MudItem xs="12" md="4">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Total cotizado</MudText>
+                            <MudText Typo="Typo.h6">
+                                @(pedido.CotizacionMonto.HasValue ? FormatUtils.FormatCurrency(pedido.CotizacionMonto.Value) : "No informado")
+                            </MudText>
+                        </MudStack>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Entrega estimada</MudText>
+                            <MudText Typo="Typo.body2">
+                                @(pedido.TiempoEntregaEstimado.HasValue ? $"{pedido.TiempoEntregaEstimado.Value.TotalMinutes:N0} minutos" : "A coordinar")
+                            </MudText>
+                        </MudStack>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Modo de entrega</MudText>
+                            <MudText Typo="Typo.body2">@pedido.MetodoEntregaPreferido</MudText>
+                        </MudStack>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Notas internas</MudText>
+                            <MudText Typo="Typo.body2">@(!string.IsNullOrWhiteSpace(pedido.Observaciones) ? pedido.Observaciones : "Sin comentarios")</MudText>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+
+                <MudDivider Class="my-3" />
+
+                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                    <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.Place" Color="Color.Primary" />
+                        <MudText Typo="Typo.body2">@pedido.Direccion</MudText>
+                    </MudStack>
+                    <MudStack Row="true" Spacing="1">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Person" OnClick="@(() => MostrarContacto(pedido))">
+                            Contacto del paciente
+                        </MudButton>
+                        <MudMenu Variant="Variant.Filled" Color="Color.Primary" AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight" Disabled="!pedido.CotizacionAceptada">
+                            <ActivatorContent>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Update">
+                                    Actualizar estado
+                                </MudButton>
+                            </ActivatorContent>
+                            <ChildContent>
+                                @foreach (var estado in GetEstadosDisponibles(pedido))
+                                {
+                                    <MudMenuItem OnClick="@(() => CambiarEstado(pedido, estado))">
+                                        <MudIcon Icon="@estado.ToEstadoIcon()" Class="me-2" />
+                                        @estado.ToFriendlyText()
+                                    </MudMenuItem>
+                                }
+                            </ChildContent>
+                        </MudMenu>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+        }
+    </MudStack>
+}
+
+@code {
+    private readonly List<PharmacyOrder> _pedidos = new();
+    private bool _isLoading = true;
+    private static readonly EstadoPedido[] Workflow =
+    {
+        EstadoPedido.COTIZADO,
+        EstadoPedido.CONFIRMADO,
+        EstadoPedido.EN_PREPARACION,
+        EstadoPedido.LISTO_PARA_ENTREGA,
+        EstadoPedido.EN_ENTREGA,
+        EstadoPedido.ENTREGADO
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthState.OnChange += HandleAuthChanged;
+        PedidosService.OrdersUpdated += HandleOrdersUpdated;
+
+        if (!AuthState.IsAuthenticated)
+        {
+            RedirectToLogin();
+            return;
+        }
+
+        await LoadPedidosAsync();
+    }
+
+    private async Task LoadPedidosAsync()
+    {
+        _isLoading = true;
+        _pedidos.Clear();
+
+        var pedidos = await PedidosService.GetAcceptedOrdersAsync();
+        if (AuthState.Current is { } profile)
+        {
+            _pedidos.AddRange(pedidos.Where(p => p.DistanciaKm <= profile.RadioCoberturaKm + 0.1));
+        }
+        else
+        {
+            _pedidos.AddRange(pedidos);
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private IEnumerable<EstadoPedido> GetEstadosDisponibles(PharmacyOrder pedido)
+    {
+        var currentIndex = Array.IndexOf(Workflow, pedido.Estado);
+        if (currentIndex < 0)
+        {
+            yield break;
+        }
+
+        for (var i = currentIndex + 1; i < Workflow.Length; i++)
+        {
+            yield return Workflow[i];
+        }
+    }
+
+    private void RedirectToLogin()
+    {
+        Navigation.NavigateTo("/login?returnUrl=/pedidos/activos", forceLoad: true);
+    }
+
+    private void MostrarContacto(PharmacyOrder pedido)
+    {
+        var contenido = $"{pedido.PacienteNombre}\nTeléfono: {pedido.PacienteTelefono}\nEmail: {pedido.PacienteEmail}";
+        Snackbar.Add(contenido, Severity.Info);
+    }
+
+    private void CambiarEstado(PharmacyOrder pedido, EstadoPedido nuevoEstado)
+    {
+        var actualizado = PedidosService.AdvanceOrderStatus(pedido.Id, nuevoEstado);
+        if (actualizado)
+        {
+            Snackbar.Add($"Pedido {pedido.NumeroPedido} actualizado a {nuevoEstado.ToFriendlyText()}.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("No pudimos actualizar el estado del pedido.", Severity.Error);
+        }
+    }
+
+    private async void HandleOrdersUpdated()
+    {
+        await LoadPedidosAsync();
+    }
+
+    private async void HandleAuthChanged()
+    {
+        if (!AuthState.IsAuthenticated)
+        {
+            RedirectToLogin();
+        }
+        else
+        {
+            await LoadPedidosAsync();
+        }
+    }
+
+    public void Dispose()
+    {
+        AuthState.OnChange -= HandleAuthChanged;
+        PedidosService.OrdersUpdated -= HandleOrdersUpdated;
+    }
+}

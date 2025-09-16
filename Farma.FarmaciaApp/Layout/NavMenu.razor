@@ -1,0 +1,87 @@
+@inject Farma.FarmaciaApp.Services.PharmacyAuthState AuthState
+@inject Farma.FarmaciaApp.Services.PedidosService PedidosService
+@implements IDisposable
+
+@if (!AuthState.IsAuthenticated)
+{
+    <MudText Typo="Typo.body1" Class="pa-4">Inicie sesión para acceder a los pedidos disponibles.</MudText>
+}
+else
+{
+    <MudDrawerHeader Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); color: white;">
+        <MudStack Spacing="1">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudAvatar Size="Size.Medium" Style="background: rgba(255,255,255,0.2);">
+                    <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Style="color: white;" />
+                </MudAvatar>
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.subtitle1" Style="color: white; font-weight: 600;">
+                        @AuthState.Current?.Nombre
+                    </MudText>
+                    <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.8);">
+                        @AuthState.Current?.Direccion
+                    </MudText>
+                </MudStack>
+            </MudStack>
+        </MudStack>
+    </MudDrawerHeader>
+    
+    <MudNavMenu Style="padding-top: 16px;">
+        <MudNavLink Href="/pedidos/disponibles" 
+                    Icon="@Icons.Material.Filled.Assignment" 
+                    Match="NavLinkMatch.Prefix"
+                    Style="border-radius: 12px; margin: 4px 8px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
+                <span>📋 Pedidos Disponibles</span>
+                @if (_pendingCount > 0)
+                {
+                    <MudBadge Color="Color.Primary" Content="@_pendingCount" />
+                }
+            </MudStack>
+        </MudNavLink>
+        
+        <MudNavLink Href="/pedidos/activos" 
+                    Icon="@Icons.Material.Filled.LocalShipping" 
+                    Match="NavLinkMatch.Prefix"
+                    Style="border-radius: 12px; margin: 4px 8px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
+                <span>📦 Mis Pedidos</span>
+                @if (_activeCount > 0)
+                {
+                    <MudBadge Color="Color.Success" Content="@_activeCount" />
+                }
+            </MudStack>
+        </MudNavLink>
+    </MudNavMenu>
+}
+
+@code {
+    private int _pendingCount;
+    private int _activeCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCountsAsync();
+        PedidosService.OrdersUpdated += HandleOrdersUpdated;
+    }
+
+    private async Task LoadCountsAsync()
+    {
+        _pendingCount = AuthState.IsAuthenticated ? (await PedidosService.GetPendingOrdersAsync()).Count : 0;
+        _activeCount = AuthState.IsAuthenticated ? (await PedidosService.GetAcceptedOrdersAsync()).Count : 0;
+        if (AuthState.IsAuthenticated)
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void HandleOrdersUpdated()
+    {
+        await LoadCountsAsync();
+    }
+
+    public void Dispose()
+    {
+        PedidosService.OrdersUpdated -= HandleOrdersUpdated;
+    }
+}

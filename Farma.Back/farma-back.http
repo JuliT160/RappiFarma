@@ -1,0 +1,6 @@
+@farma_back_HostAddress = http://localhost:5254
+
+GET {{farma_back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

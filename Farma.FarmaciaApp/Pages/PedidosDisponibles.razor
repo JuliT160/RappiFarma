@@ -1,0 +1,288 @@
+@page "/pedidos/disponibles"
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject PharmacyAuthState AuthState
+@inject PedidosService PedidosService
+
+@implements IDisposable
+@using Farma.FarmaciaApp.Components
+@using Farma.FarmaciaApp.Helpers
+@using Farma.FarmaciaApp.Models
+@using Farma.FarmaciaApp.Services
+@using MudBlazor
+
+<!-- Header mejorado -->
+<MudPaper Elevation="0" Class="pa-6 mb-4" Style="background: linear-gradient(135deg, #FF6B35 0%, #FF8A65 100%); border-radius: 20px;">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudStack Spacing="1">
+            <MudText Typo="Typo.h4" Style="color: white; font-weight: 700;">
+                📋 Pedidos Disponibles
+            </MudText>
+            <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">
+                Nuevos pedidos en tu radio de cobertura listos para cotizar
+            </MudText>
+        </MudStack>
+        <MudStack AlignItems="AlignItems.End">
+            <MudChip Color="Color.Surface" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocationOn">
+                @if (AuthState.Current is { } profile)
+                {
+                    <span>Radio: @profile.RadioCoberturaKm km</span>
+                }
+            </MudChip>
+            <MudButton Variant="Variant.Text" 
+                       StartIcon="@Icons.Material.Filled.Refresh" 
+                       Style="color: white;"
+                       OnClick="LoadPedidosAsync">
+                Actualizar
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudStack AlignItems="AlignItems.Center" Class="mt-6">
+        <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        <MudText Typo="Typo.body1" Class="mt-2">Buscando pedidos cercanos…</MudText>
+    </MudStack>
+}
+else if (_pedidos.Count == 0)
+{
+    <MudPaper Elevation="0" Class="pa-8 mt-4 text-center" Style="border-radius: 20px; background: rgba(255, 245, 240, 0.5);">
+        <MudStack AlignItems="AlignItems.Center" Spacing="3">
+            <MudAvatar Size="Size.Large" Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); width: 80px; height: 80px;">
+                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Large" Style="color: white;" />
+            </MudAvatar>
+            <MudText Typo="Typo.h5" Style="color: #FF6B35; font-weight: 600;">
+                ¡Todo al día!
+            </MudText>
+            <MudText Typo="Typo.body1" Class="text-center" Style="color: #666; max-width: 400px;">
+                No hay pedidos pendientes en tu radio de cobertura. Te notificaremos cuando lleguen nuevos pedidos.
+            </MudText>
+            <MudButton Variant="Variant.Outlined" 
+                       Color="Color.Primary" 
+                       StartIcon="@Icons.Material.Filled.Refresh"
+                       OnClick="LoadPedidosAsync">
+                Buscar Nuevos Pedidos
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+}
+else
+{
+    <MudStack Spacing="3" Class="mt-4">
+        @foreach (var pedido in _pedidos)
+        {
+            <MudPaper Elevation="0" Class="pa-5 pedido-card">
+                <MudStack Spacing="3">
+                    <!-- Header del pedido mejorado -->
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudAvatar Size="Size.Medium" Style="background: linear-gradient(135deg, #FF6B35, #FF8A65);">
+                                <MudIcon Icon="@Icons.Material.Filled.Receipt" Style="color: white;" />
+                            </MudAvatar>
+                            <MudStack Spacing="0">
+                                <MudText Typo="Typo.h6" Style="font-weight: 600;">Pedido #@pedido.NumeroPedido</MudText>
+                                <MudText Typo="Typo.caption" Class="text-secondary">
+                                    Hace @((DateTime.Now - pedido.FechaCreacion).TotalMinutes) minutos
+                                </MudText>
+                            </MudStack>
+                        </MudStack>
+
+                        <MudStack AlignItems="AlignItems.End" Spacing="1">
+                            <MudChip Color="@pedido.Estado.ToChipColor()"
+                                     Variant="Variant.Filled"
+                                     Size="Size.Small"
+                                     StartIcon="@pedido.Estado.ToEstadoIcon()">
+                                @pedido.Estado.ToFriendlyText()
+                            </MudChip>
+                            <MudChip Color="Color.Info"
+                                     Variant="Variant.Text"
+                                     Size="Size.Small"
+                                     StartIcon="@Icons.Material.Filled.NearMe">
+                                @Farma.Shared.Utils.FormatUtils.FormatDistance(pedido.DistanciaKm)
+                            </MudChip>
+                        </MudStack>
+                    </MudStack>
+                </MudStack>
+                <MudDivider Class="my-3" />
+
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Datos del paciente</MudText>
+                            <MudText Typo="Typo.body2">@pedido.PacienteNombre</MudText>
+                            <MudText Typo="Typo.caption" Class="text-secondary">@pedido.PacienteTelefono · @pedido.PacienteEmail</MudText>
+                        </MudStack>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Entrega solicitada</MudText>
+                            <MudText Typo="Typo.body2">@pedido.Direccion</MudText>
+                            <MudText Typo="Typo.caption" Class="text-secondary">Preferencia: @pedido.MetodoEntregaPreferido</MudText>
+                        </MudStack>
+                    </MudItem>
+                    @if (!string.IsNullOrWhiteSpace(pedido.NotasCliente))
+                    {
+                        <MudItem xs="12">
+                            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true" Icon="@Icons.Material.Filled.Info">
+                                @pedido.NotasCliente
+                            </MudAlert>
+                        </MudItem>
+                    }
+                    <MudItem xs="12">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">Recetas adjuntas</MudText>
+                            <MudChipSet>
+                                @foreach (var receta in pedido.Recetas)
+                                {
+                                    <MudChip Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Description">
+                                        @receta.NombreArchivo
+                                    </MudChip>
+                                }
+                            </MudChipSet>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
+
+                <MudDivider Class="my-3" />
+
+                <!-- Botones de acción mejorados -->
+                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-2">
+                    <MudStack Row="true" Spacing="1">
+                        <MudChip Color="Color.Primary" Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Material.Filled.Schedule">
+                            Recibido: @pedido.FechaCreacion.ToString("HH:mm")
+                        </MudChip>
+                        <MudChip Color="Color.Secondary" Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Material.Filled.Description">
+                            @pedido.Recetas.Count receta@(pedido.Recetas.Count == 1 ? "" : "s")
+                        </MudChip>
+                    </MudStack>
+                    
+                    <MudStack Row="true" Spacing="2">
+                        <MudButton Variant="Variant.Text" 
+                                   Color="Color.Primary" 
+                                   StartIcon="@Icons.Material.Filled.Visibility" 
+                                   OnClick="@(() => MostrarDetallePedido(pedido))"
+                                   Style="text-transform: none;">
+                            Ver Detalle
+                        </MudButton>
+                        <MudButton Variant="Variant.Filled" 
+                                   Color="Color.Primary" 
+                                   StartIcon="@Icons.Material.Filled.LocalOffer" 
+                                   OnClick="@(() => CotizarPedidoAsync(pedido))"
+                                   Style="border-radius: 12px; font-weight: 600; text-transform: none; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);">
+                            💰 Cotizar Pedido
+                        </MudButton>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+        }
+    </MudStack>
+}
+
+@code {
+    private readonly List<PharmacyOrder> _pedidos = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthState.OnChange += HandleAuthChanged;
+        PedidosService.OrdersUpdated += HandleOrdersUpdated;
+
+        if (!AuthState.IsAuthenticated)
+        {
+            RedirectToLogin();
+            return;
+        }
+
+        await LoadPedidosAsync();
+    }
+
+    private async Task LoadPedidosAsync()
+    {
+        _isLoading = true;
+        _pedidos.Clear();
+
+        var pedidos = await PedidosService.GetPendingOrdersAsync();
+        if (AuthState.Current is { } profile)
+        {
+            _pedidos.AddRange(pedidos.Where(p => p.DistanciaKm <= profile.RadioCoberturaKm + 0.1));
+        }
+        else
+        {
+            _pedidos.AddRange(pedidos);
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void RedirectToLogin()
+    {
+        var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+        if (string.IsNullOrEmpty(returnUrl))
+        {
+            returnUrl = "pedidos/disponibles";
+        }
+
+        Navigation.NavigateTo($"/login?returnUrl=/{returnUrl}", forceLoad: true);
+    }
+
+    private async Task CotizarPedidoAsync(PharmacyOrder pedido)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(CotizarPedidoDialog.Pedido), pedido }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<CotizarPedidoDialog>("Cotizar pedido", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is CotizarPedidoDialog.CotizacionResult cotizacion)
+        {
+            var ok = await PedidosService.SendQuoteAsync(pedido.Id, cotizacion.Monto, cotizacion.Mensaje, cotizacion.TiempoEntrega);
+            if (ok)
+            {
+                Snackbar.Add($"Cotización enviada para el pedido {pedido.NumeroPedido}.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("No pudimos enviar la cotización, intenta nuevamente.", Severity.Error);
+            }
+        }
+    }
+
+    private void MostrarDetallePedido(PharmacyOrder pedido)
+    {
+        var mensaje = $"Paciente: {pedido.PacienteNombre}\n" +
+                      $"Contacto: {pedido.PacienteTelefono}\n" +
+                      $"Dirección: {pedido.Direccion}\n" +
+                      $"Notas: {pedido.NotasCliente ?? "Sin notas"}";
+        Snackbar.Add(mensaje, Severity.Info);
+    }
+
+    private async void HandleOrdersUpdated()
+    {
+        await LoadPedidosAsync();
+    }
+
+    private async void HandleAuthChanged()
+    {
+        if (!AuthState.IsAuthenticated)
+        {
+            RedirectToLogin();
+        }
+        else
+        {
+            await LoadPedidosAsync();
+        }
+    }
+
+    public void Dispose()
+    {
+        AuthState.OnChange -= HandleAuthChanged;
+        PedidosService.OrdersUpdated -= HandleOrdersUpdated;
+    }
+}

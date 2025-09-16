@@ -1,0 +1,18 @@
+@page "/"
+@using Farma.FarmaciaApp.Services
+@using MudBlazor
+@inject NavigationManager Navigation
+@inject PharmacyAuthState AuthState
+
+<MudStack AlignItems="AlignItems.Center" Class="mt-10">
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    <MudText Typo="Typo.body1" Class="mt-2">Redirigiendo…</MudText>
+</MudStack>
+
+@code {
+    protected override void OnInitialized()
+    {
+        var destination = AuthState.IsAuthenticated ? "/pedidos/disponibles" : "/login";
+        Navigation.NavigateTo(destination, forceLoad: true);
+    }
+}

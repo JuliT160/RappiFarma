@@ -1,0 +1,142 @@
+@page "/login"
+@using Farma.FarmaciaApp.Services
+@using MudBlazor
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject PharmacyAuthState AuthState
+
+<MudGrid Class="login-wrapper" Justify="Justify.Center" AlignItems="AlignItems.Center">
+    <MudItem xs="12" sm="8" md="5" lg="4">
+        <MudPaper Elevation="0" Class="pa-8 login-card">
+            <MudStack Spacing="5">
+                <MudStack Spacing="2" AlignItems="AlignItems.Center">
+                    <!-- Logo/Icono principal -->
+                    <MudAvatar Size="Size.Large" Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); width: 80px; height: 80px;">
+                        <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Size="Size.Large" Style="color: white;" />
+                    </MudAvatar>
+                    
+                    <MudText Typo="Typo.h3" Style="font-weight: 700; color: #FF6B35; margin-top: 16px;">
+                        RappiFarma
+                    </MudText>
+                    
+                    <MudChip Color="Color.Primary" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.BusinessCenter" Class="mud-width-fit">
+                        Portal para Farmacias
+                    </MudChip>
+                    
+                    <MudText Typo="Typo.body1" Class="text-center" Style="color: #666; margin-top: 8px;">
+                        Gestiona pedidos de medicamentos de manera eficiente
+                    </MudText>
+                </MudStack>
+
+                <MudAlert Severity="Severity.Info" Variant="Variant.Text">
+                    Para la demo podés usar <strong>farmacia.central / central2024</strong> o cualquiera de las farmacias registradas.
+                </MudAlert>
+
+                <MudForm @ref="_form" Model="_model">
+                    <MudStack Spacing="4">
+                        <MudTextField @bind-Value="_model.Codigo" 
+                                      Label="ID de Farmacia" 
+                                      Placeholder="farmacia.central" 
+                                      Variant="Variant.Outlined" 
+                                      Required="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Store" 
+                                      Style="margin-top: 16px;" />
+                        
+                        <MudTextField @bind-Value="_model.Password" 
+                                      Label="Contraseña" 
+                                      Variant="Variant.Outlined" 
+                                      InputType="InputType.Password" 
+                                      Required="true"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Lock" />
+                        
+                        <MudButton Variant="Variant.Filled" 
+                                   Color="Color.Primary" 
+                                   Disabled="_isSubmitting" 
+                                   FullWidth="true"
+                                   Size="Size.Large"
+                                   StartIcon="@Icons.Material.Filled.Login"
+                                   OnClick="HandleLoginAsync"
+                                   Style="height: 56px; border-radius: 16px; font-weight: 600; margin-top: 24px;">
+                            @if (_isSubmitting)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                <span style="margin-left: 8px;">Ingresando...</span>
+                            }
+                            else
+                            {
+                                <span>Ingresar al Portal</span>
+                            }
+                        </MudButton>
+                    </MudStack>
+                </MudForm>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private readonly LoginModel _model = new();
+    private MudForm? _form;
+    private bool _isSubmitting;
+    private string? _returnUrl;
+
+    protected override void OnInitialized()
+    {
+        if (AuthState.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/pedidos/disponibles", forceLoad: true);
+            return;
+        }
+
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (!string.IsNullOrEmpty(uri.Query))
+        {
+            var segments = uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var segment in segments)
+            {
+                var kv = segment.Split('=', 2, StringSplitOptions.RemoveEmptyEntries);
+                if (kv.Length > 0 && string.Equals(kv[0], "returnUrl", StringComparison.OrdinalIgnoreCase))
+                {
+                    _returnUrl = kv.Length > 1 ? Uri.UnescapeDataString(kv[1]) : null;
+                    break;
+                }
+            }
+        }
+    }
+
+    private async Task HandleLoginAsync()
+    {
+        if (_form is null)
+        {
+            return;
+        }
+
+        await _form.Validate();
+        if (!_form.IsValid)
+        {
+            return;
+        }
+
+        _isSubmitting = true;
+        var success = await AuthState.LoginAsync(_model.Codigo, _model.Password);
+        _isSubmitting = false;
+
+        if (!success)
+        {
+            Snackbar.Add("Credenciales inválidas. Revisa el ID y la contraseña provistos.", Severity.Error);
+            return;
+        }
+
+        Snackbar.Add("Sesión iniciada.", Severity.Success);
+        var destination = string.IsNullOrWhiteSpace(_returnUrl) ? "/pedidos/disponibles" : _returnUrl!;
+        Navigation.NavigateTo(destination, forceLoad: true);
+    }
+
+    private class LoginModel
+    {
+        public string Codigo { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

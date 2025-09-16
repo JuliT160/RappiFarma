@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:farmaClientApp.ViewModels"
+             xmlns:dtos="clr-namespace:Farma.Shared.DTOs;assembly=Farma.Shared"
+             x:Class="farmaClientApp.Views.MisPedidosPage"
+             x:DataType="viewmodels:MisPedidosViewModel"
+             Title="Mis Pedidos"
+             BackgroundColor="{StaticResource Secondary}">
+
+    <ContentPage.BindingContext>
+        <viewmodels:MisPedidosViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <!-- Indicador de carga -->
+        <ActivityIndicator IsVisible="{Binding IsLoading}" 
+                           IsRunning="{Binding IsLoading}"
+                           Color="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           HeightRequest="50" />
+
+        <!-- Lista de pedidos -->
+        <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}"
+                     RefreshColor="{StaticResource Primary}"
+                     IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
+            
+            <CollectionView ItemsSource="{Binding MisPedidos}"
+                            BackgroundColor="Transparent">
+                
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" 
+                                         HorizontalOptions="Center"
+                                         Spacing="16"
+                                         Padding="40">
+                        <Label Text="📦" 
+                               FontSize="64" 
+                               HorizontalOptions="Center" 
+                               Opacity="0.5" />
+                        <Label Text="No tienes pedidos aún" 
+                               FontFamily="OpenSansSemibold"
+                               FontSize="20" 
+                               TextColor="{StaticResource Gray600}"
+                               HorizontalOptions="Center" />
+                        <Label Text="Cuando hagas tu primer pedido aparecerá aquí" 
+                               FontSize="14" 
+                               TextColor="{StaticResource Gray500}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                        
+                        <Button Text="Hacer mi primer pedido"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="{StaticResource White}"
+                                FontFamily="OpenSansSemibold"
+                                CornerRadius="12"
+                                Padding="20,12"
+                                Margin="0,20,0,0"
+                                Clicked="OnNuevoPedidoClicked" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dtos:PedidoDto">
+                        <Grid Padding="16,8">
+                            <!-- Card del pedido -->
+                            <Border BackgroundColor="{StaticResource White}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 15"
+                                    Padding="20"
+                                    Margin="0,4">
+                                <Border.Shadow>
+                                    <Shadow Brush="{StaticResource Gray300}" Offset="0,4" Radius="12" Opacity="0.1"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MisPedidosViewModel}}, Path=VerDetallePedidoCommand}"
+                                                          CommandParameter="{Binding}" />
+                                </Border.GestureRecognizers>
+                                
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                                      ColumnDefinitions="Auto,*,Auto">
+                                    
+                                    <!-- Icono de estado y número de pedido -->
+                                    <Border Grid.Row="0" Grid.Column="0"
+                                            BackgroundColor="{Binding Estado, Converter={StaticResource EstadoToColorConverter}}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 20"
+                                            WidthRequest="40"
+                                            HeightRequest="40"
+                                            Margin="0,0,15,0">
+                                        <Label Text="{Binding Estado, Converter={StaticResource EstadoToIconConverter}}"
+                                               FontSize="18"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
+                                        <Label Text="{Binding Id, StringFormat='Pedido #{0}'}"
+                                               FontFamily="OpenSansSemibold"
+                                               FontSize="16"
+                                               TextColor="{StaticResource Gray900}" />
+                                        
+                                        <Label Text="{Binding Estado, Converter={StaticResource EstadoToTextConverter}}"
+                                               FontFamily="OpenSansSemibold"
+                                               FontSize="14"
+                                               TextColor="{Binding Estado, Converter={StaticResource EstadoToColorConverter}}" />
+                                    </VerticalStackLayout>
+                                    
+                                    <!-- Botón de acción -->
+                                    <Button Grid.Row="0" Grid.Column="2"
+                                            Text="⋮"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource Gray500}"
+                                            FontSize="20"
+                                            Padding="8"
+                                            VerticalOptions="Start" />
+
+                                    <!-- Información del pedido -->
+                                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" 
+                                                         Spacing="8" 
+                                                         Margin="0,15,0,0">
+                                        
+                                        <!-- Dirección -->
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="📍" FontSize="16" />
+                                            <Label FontSize="14" TextColor="{StaticResource Gray700}" LineBreakMode="TailTruncation" MaxLines="1">
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="Calle" />
+                                                        <Binding Path="Altura" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                        
+                                        <!-- Fecha -->
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="🕒" FontSize="16" />
+                                            <Label Text="{Binding FechaCreacion, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource Gray600}" />
+                                        </HorizontalStackLayout>
+                                        
+                                        <!-- Recetas -->
+                                        <HorizontalStackLayout Spacing="10">
+                                            <Label Text="💊" FontSize="16" />
+                                            <Label FontSize="14" TextColor="{StaticResource Gray600}">
+                                                <Label.Text>
+                                                    <MultiBinding StringFormat="{}{0} receta{1}">
+                                                        <Binding Path="Recetas.Count" />
+                                                        <Binding Path="Recetas.Count" Converter="{StaticResource PluralConverter}" />
+                                                    </MultiBinding>
+                                                </Label.Text>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                        
+                                        <!-- Precio (si está disponible) -->
+                                        <HorizontalStackLayout Spacing="10" IsVisible="{Binding Cotizaciones.Count, Converter={StaticResource CountToBoolConverter}}">
+                                            <Label Text="💰" FontSize="16" />
+                                            <Label Text="{Binding Cotizaciones[0].MontoTotal, StringFormat='${0:N0}'}"
+                                                   FontFamily="OpenSansSemibold"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource Primary}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <!-- Progress bar para estados activos -->
+                                    <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                                 Progress="{Binding Estado, Converter={StaticResource EstadoToProgressConverter}}"
+                                                 ProgressColor="{StaticResource Primary}"
+                                                 BackgroundColor="{StaticResource Gray200}"
+                                                 HeightRequest="4"
+                                                 Margin="0,15,0,10"
+                                                 IsVisible="{Binding Estado, Converter={StaticResource EstadoIsActiveConverter}}" />
+
+                                    <!-- Botones de acción -->
+                                    <HorizontalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" 
+                                                           Spacing="10" 
+                                                           HorizontalOptions="End"
+                                                           IsVisible="{Binding Estado, Converter={StaticResource EstadoCanCancelConverter}}">
+                                        
+                                        <Button Text="Cancelar"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MisPedidosViewModel}}, Path=CancelarPedidoCommand}"
+                                                CommandParameter="{Binding}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource ErrorRed}"
+                                                BorderColor="{StaticResource ErrorRed}"
+                                                BorderWidth="1"
+                                                FontSize="12"
+                                                CornerRadius="8"
+                                                Padding="12,6" />
+                                        
+                                        <Button Text="Ver Detalle"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MisPedidosViewModel}}, Path=VerDetallePedidoCommand}"
+                                                CommandParameter="{Binding}"
+                                                BackgroundColor="{StaticResource Primary}"
+                                                TextColor="{StaticResource White}"
+                                                FontSize="12"
+                                                CornerRadius="8"
+                                                Padding="12,6" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,28 @@
+.pedido-card {
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 107, 53, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 245, 240, 0.8) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.pedido-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #FF6B35 0%, #FF8A65 100%);
+}
+
+.pedido-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 107, 53, 0.2);
+}
+
+.pedido-card .mud-chip-set {
+    gap: 8px;
+}

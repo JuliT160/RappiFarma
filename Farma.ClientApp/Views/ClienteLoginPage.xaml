@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:farmaClientApp.ViewModels"
              x:Class="farmaClientApp.Views.ClienteLoginPage"
              x:DataType="viewmodels:ClienteLoginViewModel"
-             BackgroundColor="{StaticResource Secondary}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColorLight}, Dark={StaticResource PageBackgroundColorDark}}"
              Shell.NavBarIsVisible="False">
 
     <ContentPage.BindingContext>
@@ -13,70 +13,68 @@
 
     <ScrollView>
         <Grid>
-            <!-- Fondo con gradiente -->
-            <BoxView>
-                <BoxView.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
-                        <GradientStop Color="{StaticResource PrimaryLight}" Offset="0.5" />
-                        <GradientStop Color="{StaticResource Tertiary}" Offset="1.0" />
-                    </LinearGradientBrush>
-                </BoxView.Background>
-            </BoxView>
+            <VerticalStackLayout Spacing="32" Padding="32,48,32,40" VerticalOptions="Center">
 
-            <!-- Contenido principal -->
-            <VerticalStackLayout Spacing="0" VerticalOptions="Center" Padding="40,60">
-                
-                <!-- Logo y título -->
-                <VerticalStackLayout Spacing="16" Margin="0,0,0,50">
-                    <!-- Icono de farmacia -->
-                    <Border BackgroundColor="{StaticResource White}" 
-                            StrokeShape="RoundRectangle 35"
+                <!-- Logo y titulo -->
+                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Border BackgroundColor="{DynamicResource SurfaceMutedBackgroundColor}"
                             StrokeThickness="0"
-                            HeightRequest="70" 
-                            WidthRequest="70" 
+                            StrokeShape="RoundRectangle 36"
+                            HeightRequest="72"
+                            WidthRequest="72"
                             HorizontalOptions="Center">
                         <Border.Shadow>
-                            <Shadow Brush="{StaticResource Gray300}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                            <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,4" Radius="12" Opacity="0.25" />
                         </Border.Shadow>
-                         <Label Text="🛵" 
-                                FontSize="35" 
-                                HorizontalOptions="Center" 
-                                VerticalOptions="Center" />
-                     </Border>
-                    
-                    <Label Text="RappiFarma" 
+                        <Label Text="RF"
+                               FontSize="34"
+                               FontFamily="OpenSansSemibold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <Label Text="RappiFarma"
                            FontFamily="OpenSansSemibold"
-                           FontSize="32" 
-                           TextColor="{StaticResource White}" 
+                           FontSize="32"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
                            HorizontalOptions="Center" />
-                    
-                    <Label Text="Tu farmacia a domicilio" 
+
+                    <Label Text="Tu farmacia a domicilio"
                            FontFamily="OpenSansRegular"
-                           FontSize="16" 
-                           TextColor="{StaticResource White}" 
-                           HorizontalOptions="Center"
-                           Opacity="0.9" />
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                           HorizontalOptions="Center" />
                 </VerticalStackLayout>
 
                 <!-- Formulario de login -->
-                <Border BackgroundColor="{StaticResource White}"
-                        StrokeShape="RoundRectangle 20"
-                        StrokeThickness="0"
-                        Margin="0,0,0,30"
-                        Padding="30,35">
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 24"
+                        Margin="0,0,0,24"
+                        Padding="0">
                     <Border.Shadow>
-                        <Shadow Brush="{StaticResource Gray400}" Offset="0,8" Radius="20" Opacity="0.15"/>
+                        <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,8" Radius="20" Opacity="0.18" />
                     </Border.Shadow>
 
-                    <VerticalStackLayout Spacing="25">
+                    <VerticalStackLayout Spacing="24" Padding="28,26,28,32">
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource CredentialsAccentColorLight}, Dark={StaticResource CredentialsAccentColorDark}}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 16"
+                                Padding="14,8"
+                                HorizontalOptions="Center">
+                            <Label Text="Ingresa con tus credenciales"
+                                   FontFamily="OpenSansSemibold"
+                                   FontSize="16"
+                                   TextColor="{StaticResource White}" />
+                        </Border>
 
-                        <!-- Botón Google Sign-In (Futuro) -->
-                        <Button Text="🔐 Continuar con Google"
+                        <!-- Boton Google Sign-In (Futuro) -->
+                        <Button Text="Continuar con Google"
                                 Command="{Binding GoogleLoginCommand}"
-                                BackgroundColor="{StaticResource White}"
-                                TextColor="{StaticResource Gray700}"
-                                BorderColor="{StaticResource Gray300}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"
+                                BorderColor="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
                                 BorderWidth="1"
                                 FontFamily="OpenSansSemibold"
                                 FontSize="16"
@@ -84,74 +82,77 @@
                                 HeightRequest="52"
                                 Margin="0,0,0,10">
                             <Button.Shadow>
-                                <Shadow Brush="{StaticResource Gray300}" Offset="0,2" Radius="8" Opacity="0.2"/>
+                                <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,2" Radius="8" Opacity="0.18" />
                             </Button.Shadow>
                         </Button>
 
                         <!-- Separador -->
-                        <Grid ColumnDefinitions="*,Auto,*" Margin="0,5,0,15">
-                            <BoxView Grid.Column="0" 
-                                     BackgroundColor="{StaticResource Gray300}" 
-                                     HeightRequest="1" 
+                        <Grid ColumnDefinitions="*,Auto,*" Margin="0,5,0,10">
+                            <BoxView Grid.Column="0"
+                                     BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
+                                     HeightRequest="1"
                                      VerticalOptions="Center" />
-                            <Label Grid.Column="1" 
-                                   Text="o continúa con email" 
-                                   FontSize="12" 
-                                   TextColor="{StaticResource Gray500}"
+                            <Label Grid.Column="1"
+                                   Text="o continua con email"
+                                   FontSize="12"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"
                                    Margin="15,0" />
-                            <BoxView Grid.Column="2" 
-                                     BackgroundColor="{StaticResource Gray300}" 
-                                     HeightRequest="1" 
+                            <BoxView Grid.Column="2"
+                                     BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
+                                     HeightRequest="1"
                                      VerticalOptions="Center" />
                         </Grid>
 
-                        <!-- Email -->
-                        <VerticalStackLayout Spacing="8">
-                            <Label Text="Email"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="14"
-                                   TextColor="{StaticResource Gray700}" />
-                            <Border Stroke="{StaticResource Gray300}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 12">
-                                <Entry Text="{Binding Email}"
-                                       Placeholder="tu@email.com"
-                                       Keyboard="Email"
-                                       BackgroundColor="Transparent"
-                                       FontSize="16" />
-                            </Border>
+                        <!-- Inputs de email y contrasena -->
+                        <VerticalStackLayout Spacing="18">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Email"
+                                       FontSize="14"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}">
+                                    <Entry Text="{Binding Email}"
+                                           Placeholder="Ingresa tu email"
+                                           Keyboard="Email"
+                                           BackgroundColor="Transparent"
+                                           FontSize="16" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Contrasena"
+                                       FontSize="14"
+                                       FontFamily="OpenSansSemibold"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                                <Border Stroke="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 12"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}">
+                                    <Entry Text="{Binding Password}"
+                                           Placeholder="Ingrese su contrasena"
+                                           IsPassword="True"
+                                           BackgroundColor="Transparent"
+                                           FontSize="16" />
+                                </Border>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
 
-                        <!-- Contraseña -->
-                        <VerticalStackLayout Spacing="8">
-                            <Label Text="Contraseña"
-                                   FontFamily="OpenSansSemibold"
-                                   FontSize="14"
-                                   TextColor="{StaticResource Gray700}" />
-                            <Border Stroke="{StaticResource Gray300}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 12">
-                                <Entry Text="{Binding Password}"
-                                       Placeholder="Ingrese su contraseña"
-                                       IsPassword="True"
-                                       BackgroundColor="Transparent"
-                                       FontSize="16" />
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <!-- Recordar y Olvidé contraseña -->
+                        <!-- Recordar y Olvido contrasena -->
                         <Grid ColumnDefinitions="*,Auto">
                             <HorizontalStackLayout Grid.Column="0" Spacing="8">
-                                <CheckBox IsChecked="{Binding RememberMe}" 
+                                <CheckBox IsChecked="{Binding RememberMe}"
                                           Color="{StaticResource Primary}" />
-                                <Label Text="Recordarme" 
-                                       FontSize="14" 
-                                       TextColor="{StaticResource Gray600}"
+                                <Label Text="Recordarme"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
                                        VerticalOptions="Center" />
                             </HorizontalStackLayout>
-                            
+
                             <Button Grid.Column="1"
-                                    Text="¿Olvidaste tu contraseña?"
+                                    Text="Olvidaste tu contrasena?"
                                     Command="{Binding ForgotPasswordCommand}"
                                     BackgroundColor="Transparent"
                                     TextColor="{StaticResource Primary}"
@@ -164,20 +165,20 @@
                                TextColor="{StaticResource ErrorRed}"
                                FontSize="14"
                                HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
                                IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
 
-                        <!-- Botón de login -->
-                        <Button Text="Iniciar Sesión"
+                        <!-- Boton de login -->
+                        <Button Text="Iniciar Sesion"
                                 Command="{Binding LoginCommand}"
                                 BackgroundColor="{StaticResource Primary}"
                                 TextColor="{StaticResource White}"
                                 FontFamily="OpenSansSemibold"
                                 FontSize="16"
                                 CornerRadius="12"
-                                HeightRequest="52"
-                                Margin="0,10,0,0">
+                                HeightRequest="52">
                             <Button.Shadow>
-                                <Shadow Brush="{StaticResource Primary}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                                <Shadow Brush="{StaticResource Primary}" Offset="0,4" Radius="12" Opacity="0.28" />
                             </Button.Shadow>
                         </Button>
 
@@ -186,20 +187,18 @@
                                            IsRunning="{Binding IsLoading}"
                                            Color="{StaticResource Primary}"
                                            HeightRequest="30" />
-
                     </VerticalStackLayout>
                 </Border>
 
                 <!-- Registro -->
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
-                    <Label Text="¿No tienes cuenta?" 
-                           FontSize="14" 
-                           TextColor="{StaticResource White}" 
-                           Opacity="0.9" />
-                    <Button Text="Regístrate aquí"
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                    <Label Text="No tienes cuenta?"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray300}}" />
+                    <Button Text="Registrate aqui"
                             Command="{Binding RegisterCommand}"
                             BackgroundColor="Transparent"
-                            TextColor="{StaticResource White}"
+                            TextColor="{StaticResource Primary}"
                             FontFamily="OpenSansSemibold"
                             FontSize="14"
                             Padding="0" />
@@ -210,3 +209,5 @@
     </ScrollView>
 
 </ContentPage>
+
+

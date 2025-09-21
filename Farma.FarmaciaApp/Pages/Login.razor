@@ -1,4 +1,4 @@
-@page "/login"
+﻿@page "/login"
 @using Farma.FarmaciaApp.Services
 @using MudBlazor
 @inject NavigationManager Navigation
@@ -7,58 +7,57 @@
 
 <MudGrid Class="login-wrapper" Justify="Justify.Center" AlignItems="AlignItems.Center">
     <MudItem xs="12" sm="8" md="5" lg="4">
-        <MudPaper Elevation="0" Class="pa-8 login-card">
+        <MudPaper Elevation="0" Class="pa-8 surface-card login-card">
             <MudStack Spacing="5">
                 <MudStack Spacing="2" AlignItems="AlignItems.Center">
-                    <!-- Logo/Icono principal -->
-                    <MudAvatar Size="Size.Large" Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); width: 80px; height: 80px;">
-                        <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Size="Size.Large" Style="color: white;" />
+                    <MudAvatar Size="Size.Large" Class="credential-avatar">
+                        <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Size="Size.Large" />
                     </MudAvatar>
-                    
-                    <MudText Typo="Typo.h3" Style="font-weight: 700; color: #FF6B35; margin-top: 16px;">
+
+                    <MudText Typo="Typo.h3" Class="text-accent">
                         RappiFarma
                     </MudText>
-                    
-                    <MudChip Color="Color.Primary" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.BusinessCenter" Class="mud-width-fit">
-                        Portal para Farmacias
+
+                    <MudChip Color="Color.Primary" Variant="Variant.Filled" Class="credential-chip" StartIcon="@Icons.Material.Filled.BusinessCenter">
+                        Portal para farmacias
                     </MudChip>
-                    
-                    <MudText Typo="Typo.body1" Class="text-center" Style="color: #666; margin-top: 8px;">
-                        Gestiona pedidos de medicamentos de manera eficiente
+
+                    <MudText Typo="Typo.body1" Class="text-center text-muted">
+                        Gestioná pedidos de medicamentos de manera eficiente
                     </MudText>
                 </MudStack>
 
-                <MudAlert Severity="Severity.Info" Variant="Variant.Text">
-                    Para la demo podés usar <strong>farmacia.central / central2024</strong> o cualquiera de las farmacias registradas.
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined" Dense="true">
+                    Para la demo podés usar <strong>farmacia.central / central2025</strong> o cualquiera de las farmacias registradas.
                 </MudAlert>
 
                 <MudForm @ref="_form" Model="_model">
                     <MudStack Spacing="4">
-                        <MudTextField @bind-Value="_model.Codigo" 
-                                      Label="ID de Farmacia" 
-                                      Placeholder="farmacia.central" 
-                                      Variant="Variant.Outlined" 
+                        <MudTextField @bind-Value="_model.Codigo"
+                                      Label="ID de farmacia"
+                                      Placeholder="farmacia.central"
+                                      Variant="Variant.Outlined"
                                       Required="true"
                                       Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Store" 
-                                      Style="margin-top: 16px;" />
-                        
-                        <MudTextField @bind-Value="_model.Password" 
-                                      Label="Contraseña" 
-                                      Variant="Variant.Outlined" 
-                                      InputType="InputType.Password" 
+                                      AdornmentIcon="@Icons.Material.Filled.Store" />
+
+                        <MudTextField @bind-Value="_model.Password"
+                                      Label="Contraseña"
+                                      Variant="Variant.Outlined"
+                                      InputType="InputType.Password"
                                       Required="true"
                                       Adornment="Adornment.Start"
                                       AdornmentIcon="@Icons.Material.Filled.Lock" />
-                        
-                        <MudButton Variant="Variant.Filled" 
-                                   Color="Color.Primary" 
-                                   Disabled="_isSubmitting" 
+
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Disabled="_isSubmitting"
                                    FullWidth="true"
                                    Size="Size.Large"
                                    StartIcon="@Icons.Material.Filled.Login"
                                    OnClick="HandleLoginAsync"
-                                   Style="height: 56px; border-radius: 16px; font-weight: 600; margin-top: 24px;">
+                                   Class="mt-4"
+                                   Style="height: 56px; border-radius: 16px; font-weight: 600;">
                             @if (_isSubmitting)
                             {
                                 <MudProgressCircular Size="Size.Small" Indeterminate="true" />
@@ -66,7 +65,7 @@
                             }
                             else
                             {
-                                <span>Ingresar al Portal</span>
+                                <span>Ingresar al portal</span>
                             }
                         </MudButton>
                     </MudStack>
@@ -86,7 +85,7 @@
     {
         if (AuthState.IsAuthenticated)
         {
-            Navigation.NavigateTo("/pedidos/disponibles", forceLoad: true);
+            Navigation.NavigateTo("/pedidos/disponibles", replace: true);
             return;
         }
 
@@ -125,13 +124,13 @@
 
         if (!success)
         {
-            Snackbar.Add("Credenciales inválidas. Revisa el ID y la contraseña provistos.", Severity.Error);
+            Snackbar.Add("Credenciales inválidas. Revisá el ID y la contraseña provistos.", Severity.Error);
             return;
         }
 
         Snackbar.Add("Sesión iniciada.", Severity.Success);
         var destination = string.IsNullOrWhiteSpace(_returnUrl) ? "/pedidos/disponibles" : _returnUrl!;
-        Navigation.NavigateTo(destination, forceLoad: true);
+        Navigation.NavigateTo(destination.StartsWith("/") ? destination : $"/{destination}", replace: true);
     }
 
     private class LoginModel
@@ -140,3 +139,4 @@
         public string Password { get; set; } = string.Empty;
     }
 }
+

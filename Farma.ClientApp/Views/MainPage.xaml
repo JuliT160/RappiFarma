@@ -14,7 +14,7 @@
         <ToolbarItem Text="☰" Command="{Binding MenuCommand}" />
     </ContentPage.ToolbarItems>
 
-    <ScrollView BackgroundColor="{StaticResource Secondary}">
+    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColorLight}, Dark={StaticResource PageBackgroundColorDark}}">
         <VerticalStackLayout Spacing="0">
             
             <!-- Header con saludo -->
@@ -46,13 +46,13 @@
             <VerticalStackLayout Padding="20" Spacing="25">
 
                 <!-- Botón principal "Nuevo Pedido" -->
-                <Border BackgroundColor="{StaticResource White}"
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 20"
                         Padding="30,40"
                         Margin="0,10,0,0">
                     <Border.Shadow>
-                        <Shadow Brush="{StaticResource Gray400}" Offset="0,8" Radius="20" Opacity="0.15"/>
+                        <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,8" Radius="20" Opacity="0.15"/>
                     </Border.Shadow>
                     
                     <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
@@ -116,12 +116,12 @@
                         
                         <!-- Mis Pedidos -->
                         <Border Grid.Column="0" Grid.Row="0"
-                                BackgroundColor="{StaticResource White}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                                 StrokeThickness="0"
                                 StrokeShape="RoundRectangle 15"
                                 Padding="20,25">
                             <Border.Shadow>
-                                <Shadow Brush="{StaticResource Gray300}" Offset="0,4" Radius="12" Opacity="0.1"/>
+                                <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,4" Radius="12" Opacity="0.1"/>
                             </Border.Shadow>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding VerPedidosCommand}" />
@@ -154,12 +154,12 @@
                         
                         <!-- Configurar Perfil -->
                         <Border Grid.Column="1" Grid.Row="0"
-                                BackgroundColor="{StaticResource White}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                                 StrokeThickness="0"
                                 StrokeShape="RoundRectangle 15"
                                 Padding="20,25">
                             <Border.Shadow>
-                                <Shadow Brush="{StaticResource Gray300}" Offset="0,4" Radius="12" Opacity="0.1"/>
+                                <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,4" Radius="12" Opacity="0.1"/>
                             </Border.Shadow>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ConfigurarPerfilCommand}" />

@@ -1,27 +1,42 @@
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+@using Farma.FarmaciaApp.Theme
+@using MudBlazor
 @inject Farma.FarmaciaApp.Services.PharmacyAuthState AuthState
 @inject NavigationManager Navigation
 @implements IDisposable
 
-<MudLayout>
-    <MudDialogProvider />
-    <MudSnackbarProvider />
-        <MudAppBar Color="Color.Primary" Elevation="0">
+<MudThemeProvider >
+</MudThemeProvider>
+    <MudLayout>
+        <MudDialogProvider />
+        <MudSnackbarProvider />
+
+        <MudAppBar Elevation="0" Color="Color.Surface" Class="appbar">
             @if (AuthState.IsAuthenticated)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+                <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                               Color="Color.Primary"
+                               Edge="Edge.Start"
+                               OnClick="ToggleDrawer" />
             }
-            <MudText Typo="Typo.h6" Class="text-white">RappiFarma · Portal de Farmacias</MudText>
+
+            <MudText Typo="Typo.h6" Class="appbar-title">RappiFarma &bull; Portal de Farmacias</MudText>
             <MudSpacer />
+
             @if (AuthState.IsAuthenticated && AuthState.Current is { } profile)
             {
                 <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="2" Class="mud-width-full mud-justify-end">
                     <MudStack Spacing="1">
-                        <MudText Typo="Typo.subtitle2" Class="text-white">@profile.Nombre</MudText>
-                        <MudText Typo="Typo.caption" Class="text-white-70">Radio de cobertura: @profile.RadioCoberturaKm:F1 km</MudText>
+                        <MudText Typo="Typo.subtitle2">@profile.Nombre</MudText>
+                        <MudText Typo="Typo.caption" Class="appbar-subtitle">
+                            Radio de cobertura: @profile.RadioCoberturaKm:F1 km
+                        </MudText>
                     </MudStack>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout" OnClick="Logout">
-                        Cerrar sesión
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Logout"
+                               OnClick="Logout">
+                        Cerrar sesi&oacute;n
                     </MudButton>
                 </MudStack>
             }
@@ -29,7 +44,11 @@
 
         @if (AuthState.IsAuthenticated)
         {
-            <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Responsive" Elevation="1">
+            <MudDrawer @bind-Open="_drawerOpen"
+                       ClipMode="DrawerClipMode.Never"
+                       Variant="DrawerVariant.Responsive"
+                       Elevation="0"
+                       Class="app-drawer">
                 <NavMenu />
             </MudDrawer>
         }
@@ -41,8 +60,12 @@
         </MudMainContent>
     </MudLayout>
 
+
 @code {
     private bool _drawerOpen = true;
+    private MudThemeProvider? _themeProvider;
+    private bool _isDarkMode;
+    private IDisposable? _systemPreferenceSubscription;
 
     protected override void OnInitialized()
     {
@@ -50,15 +73,28 @@
         AuthState.OnChange += HandleAuthStateChanged;
     }
 
-    private void ToggleDrawer()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _drawerOpen = !_drawerOpen;
+        if (firstRender && _themeProvider is not null)
+        {
+            _isDarkMode = await _themeProvider.GetSystemPreference();
+            _systemPreferenceSubscription = _themeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            await InvokeAsync(StateHasChanged);
+        }
     }
+
+    private Task OnSystemPreferenceChanged(bool prefersDarkMode)
+    {
+        _isDarkMode = prefersDarkMode;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
 
     private void Logout()
     {
         AuthState.Logout();
-        Navigation.NavigateTo("/login", forceLoad: true);
+        Navigation.NavigateTo("/login", replace: true);
     }
 
     private void HandleAuthStateChanged()
@@ -70,5 +106,6 @@
     public void Dispose()
     {
         AuthState.OnChange -= HandleAuthStateChanged;
+        _systemPreferenceSubscription?.Dispose();
     }
 }

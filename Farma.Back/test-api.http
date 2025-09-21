@@ -1,7 +1,7 @@
 ### Variables
 @baseUrl = https://localhost:7097
 @basicAuth = Basic YWRtaW46YWRtaW4xMjM=
-@bearerToken = Bearer farma-api-key-2024
+@bearerToken = Bearer farma-api-key-2025
 
 ### 1. Health Check
 GET {{baseUrl}}/

@@ -31,7 +31,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM=
 ### 3. Crear Receta (Multipart)
 ```http
 POST /recetas
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 Content-Type: multipart/form-data
 
 Form Data:
@@ -51,37 +51,37 @@ Form Data:
 ### 4. Obtener Pedido por ID
 ```http
 GET /pedidos/1
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ### 5. Obtener Pedidos por Estado
 ```http
 GET /pedidos?estado=EN_COTIZACION
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ### 6. Cancelar Pedido
 ```http
 POST /pedidos/1/cancelar
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ### 7. Farmacias Cercanas (con coordenadas)
 ```http
 GET /farmacias/cercanas?lat=-34.6037&lng=-58.3816&radio=5&limite=10
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ### 8. Farmacias Cercanas (fallback por ubicación)
 ```http
 GET /farmacias/cercanas?localidad=Buenos Aires&provincia=Buenos Aires&codigoPostal=1043
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ### 9. Obtener Todas las Farmacias
 ```http
 GET /farmacias
-Authorization: Bearer farma-api-key-2024
+Authorization: Bearer farma-api-key-2025
 ```
 
 ## Estados de Pedido
@@ -118,7 +118,7 @@ Authorization: Bearer farma-api-key-2024
 ```
 data/
 └── recetas/
-    └── 2024/
+    └── 2025/
         └── 01/
             ├── guid1.jpg
             ├── guid2.pdf

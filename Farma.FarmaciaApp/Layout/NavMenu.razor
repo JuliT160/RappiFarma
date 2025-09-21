@@ -1,51 +1,55 @@
-@inject Farma.FarmaciaApp.Services.PharmacyAuthState AuthState
+﻿@inject Farma.FarmaciaApp.Services.PharmacyAuthState AuthState
 @inject Farma.FarmaciaApp.Services.PedidosService PedidosService
 @implements IDisposable
 
 @if (!AuthState.IsAuthenticated)
 {
-    <MudText Typo="Typo.body1" Class="pa-4">Inicie sesión para acceder a los pedidos disponibles.</MudText>
+    <MudText Typo="Typo.body1" Class="pa-4">
+        Iniciá sesión para acceder a los pedidos disponibles.
+    </MudText>
 }
 else
 {
-    <MudDrawerHeader Style="background: linear-gradient(135deg, #FF6B35, #FF8A65); color: white;">
-        <MudStack Spacing="1">
+    <MudDrawerHeader Class="drawer-header">
+        <MudStack Spacing="2">
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                <MudAvatar Size="Size.Medium" Style="background: rgba(255,255,255,0.2);">
-                    <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Style="color: white;" />
+                <MudAvatar Size="Size.Medium" Class="credential-avatar">
+                    <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" />
                 </MudAvatar>
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1" Style="color: white; font-weight: 600;">
-                        @AuthState.Current?.Nombre
-                    </MudText>
-                    <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.8);">
-                        @AuthState.Current?.Direccion
-                    </MudText>
+                    <MudText Typo="Typo.subtitle1">@AuthState.Current?.Nombre</MudText>
+                    <MudText Typo="Typo.caption" Class="drawer-subtitle">@AuthState.Current?.Direccion</MudText>
                 </MudStack>
             </MudStack>
         </MudStack>
     </MudDrawerHeader>
-    
-    <MudNavMenu Style="padding-top: 16px;">
-        <MudNavLink Href="/pedidos/disponibles" 
-                    Icon="@Icons.Material.Filled.Assignment" 
+
+    <MudNavMenu Class="mt-3">
+        <MudNavLink Href="/pedidos/disponibles"
                     Match="NavLinkMatch.Prefix"
-                    Style="border-radius: 12px; margin: 4px 8px;">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
-                <span>📋 Pedidos Disponibles</span>
+                    Class="nav-link"
+                    ActiveClass="nav-link nav-link-active">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudIcon Icon="@Icons.Material.Filled.Assignment" />
+                    <MudText Typo="Typo.body1">Pedidos disponibles</MudText>
+                </MudStack>
                 @if (_pendingCount > 0)
                 {
                     <MudBadge Color="Color.Primary" Content="@_pendingCount" />
                 }
             </MudStack>
         </MudNavLink>
-        
-        <MudNavLink Href="/pedidos/activos" 
-                    Icon="@Icons.Material.Filled.LocalShipping" 
+
+        <MudNavLink Href="/pedidos/activos"
                     Match="NavLinkMatch.Prefix"
-                    Style="border-radius: 12px; margin: 4px 8px;">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
-                <span>📦 Mis Pedidos</span>
+                    Class="nav-link"
+                    ActiveClass="nav-link nav-link-active">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudIcon Icon="@Icons.Material.Filled.LocalShipping" />
+                    <MudText Typo="Typo.body1">Mis pedidos</MudText>
+                </MudStack>
                 @if (_activeCount > 0)
                 {
                     <MudBadge Color="Color.Success" Content="@_activeCount" />

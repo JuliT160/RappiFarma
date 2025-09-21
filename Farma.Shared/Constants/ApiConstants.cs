@@ -9,7 +9,7 @@ public static class ApiConstants
     // Autenticación
     public const string BASIC_AUTH_USERNAME = "admin";
     public const string BASIC_AUTH_PASSWORD = "admin123";
-    public const string BEARER_TOKEN = "farma-api-key-2024";
+    public const string BEARER_TOKEN = "farma-api-key-2025";
     
     // Headers
     public const string AUTHORIZATION_HEADER = "Authorization";

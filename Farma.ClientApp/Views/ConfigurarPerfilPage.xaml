@@ -5,7 +5,7 @@
              x:Class="farmaClientApp.Views.ConfigurarPerfilPage"
              x:DataType="viewmodels:ConfigurarPerfilViewModel"
              Title="Mi Perfil"
-             BackgroundColor="{StaticResource Secondary}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColorLight}, Dark={StaticResource PageBackgroundColorDark}}">
 
     <ContentPage.BindingContext>
         <viewmodels:ConfigurarPerfilViewModel />
@@ -42,9 +42,9 @@
                            FontSize="18"
                            TextColor="{StaticResource Gray800}" />
 
-                    <Border BackgroundColor="{StaticResource White}"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                             StrokeThickness="1"
-                            Stroke="{StaticResource Gray200}"
+                            Stroke="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
                             StrokeShape="RoundRectangle 15"
                             Padding="20">
                         <VerticalStackLayout Spacing="15">
@@ -83,9 +83,9 @@
                                 Padding="8,4" />
                     </HorizontalStackLayout>
 
-                    <Border BackgroundColor="{StaticResource White}"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                             StrokeThickness="1"
-                            Stroke="{StaticResource Gray200}"
+                            Stroke="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
                             StrokeShape="RoundRectangle 15"
                             Padding="20">
                         <VerticalStackLayout Spacing="15">
@@ -141,9 +141,9 @@
                            FontSize="18"
                            TextColor="{StaticResource Gray800}" />
 
-                    <Border BackgroundColor="{StaticResource White}"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                             StrokeThickness="1"
-                            Stroke="{StaticResource Gray200}"
+                            Stroke="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
                             StrokeShape="RoundRectangle 15"
                             Padding="20">
                         <VerticalStackLayout Spacing="15">

@@ -6,7 +6,7 @@
              x:Class="farmaClientApp.Views.MisPedidosPage"
              x:DataType="viewmodels:MisPedidosViewModel"
              Title="Mis Pedidos"
-             BackgroundColor="{StaticResource Secondary}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColorLight}, Dark={StaticResource PageBackgroundColorDark}}">
 
     <ContentPage.BindingContext>
         <viewmodels:MisPedidosViewModel />
@@ -65,13 +65,13 @@
                     <DataTemplate x:DataType="dtos:PedidoDto">
                         <Grid Padding="16,8">
                             <!-- Card del pedido -->
-                            <Border BackgroundColor="{StaticResource White}"
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBackgroundColorLight}, Dark={StaticResource SurfaceBackgroundColorDark}}"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 15"
                                     Padding="20"
                                     Margin="0,4">
                                 <Border.Shadow>
-                                    <Shadow Brush="{StaticResource Gray300}" Offset="0,4" Radius="12" Opacity="0.1"/>
+                                    <Shadow Brush="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}" Offset="0,4" Radius="12" Opacity="0.1"/>
                                 </Border.Shadow>
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MisPedidosViewModel}}, Path=VerDetallePedidoCommand}"
@@ -169,7 +169,7 @@
                                     <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                                                  Progress="{Binding Estado, Converter={StaticResource EstadoToProgressConverter}}"
                                                  ProgressColor="{StaticResource Primary}"
-                                                 BackgroundColor="{StaticResource Gray200}"
+                                                 BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceStrokeColorLight}, Dark={StaticResource SurfaceStrokeColorDark}}"
                                                  HeightRequest="4"
                                                  Margin="0,15,0,10"
                                                  IsVisible="{Binding Estado, Converter={StaticResource EstadoIsActiveConverter}}" />

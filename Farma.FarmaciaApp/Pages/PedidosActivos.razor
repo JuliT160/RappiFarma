@@ -1,4 +1,4 @@
-@page "/pedidos/activos"
+﻿@page "/pedidos/activos"
 @using Farma.FarmaciaApp
 @using Farma.FarmaciaApp.Helpers
 @using Farma.FarmaciaApp.Models
@@ -19,7 +19,7 @@
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudStack Spacing="1">
             <MudText Typo="Typo.h4" Style="color: white; font-weight: 700;">
-                📦 Mis Pedidos Activos
+                Mis Pedidos Activos
             </MudText>
             <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">
                 Seguimiento y gestión de pedidos aceptados
@@ -43,7 +43,7 @@
 {
     <MudStack AlignItems="AlignItems.Center" Class="mt-6">
         <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
-        <MudText Typo="Typo.body1" Class="mt-2">Cargando pedidos…</MudText>
+        <MudText Typo="Typo.body1" Class="mt-2">Cargando pedidos</MudText>
     </MudStack>
 }
 else if (_pedidos.Count == 0)
@@ -64,7 +64,7 @@ else if (_pedidos.Count == 0)
                        StartIcon="@Icons.Material.Filled.Search"
                        Href="/pedidos/disponibles"
                        Style="border-radius: 12px; font-weight: 600; text-transform: none;">
-                🔍 Buscar Pedidos Disponibles
+                Buscar Pedidos Disponibles
             </MudButton>
         </MudStack>
     </MudPaper>
@@ -219,12 +219,12 @@ else
 
     private void RedirectToLogin()
     {
-        Navigation.NavigateTo("/login?returnUrl=/pedidos/activos", forceLoad: true);
+        Navigation.NavigateTo("/login?returnUrl=/pedidos/activos", replace: true);
     }
 
     private void MostrarContacto(PharmacyOrder pedido)
     {
-        var contenido = $"{pedido.PacienteNombre}\nTeléfono: {pedido.PacienteTelefono}\nEmail: {pedido.PacienteEmail}";
+        var contenido = $"{pedido.PacienteNombre}\nTelÃ©fono: {pedido.PacienteTelefono}\nEmail: {pedido.PacienteEmail}";
         Snackbar.Add(contenido, Severity.Info);
     }
 

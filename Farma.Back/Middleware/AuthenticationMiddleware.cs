@@ -11,7 +11,7 @@ public class AuthenticationMiddleware
     // Credenciales hardcodeadas para PoC
     private const string VALID_USERNAME = "admin";
     private const string VALID_PASSWORD = "admin123";
-    private const string VALID_API_KEY = "farma-api-key-2024";
+    private const string VALID_API_KEY = "farma-api-key-2025";
 
     public AuthenticationMiddleware(RequestDelegate next, IConfiguration configuration, ILogger<AuthenticationMiddleware> logger)
     {

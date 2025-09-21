@@ -12,19 +12,19 @@ public class PharmacyAuthState
     {
         _pharmacies = new Dictionary<string, (string Password, PharmacyProfile Profile)>(StringComparer.OrdinalIgnoreCase)
         {
-            ["farmacia.central"] = ("central2024", new PharmacyProfile(
+            ["farmacia.central"] = ("central2025", new PharmacyProfile(
                 Codigo: "farmacia.central",
                 Nombre: "Farmacia Central",
                 RadioCoberturaKm: 4.5,
                 Direccion: "Av. Corrientes 1234, CABA",
                 Contacto: "011-4567-8901")),
-            ["farmacia.barrio"] = ("barrio2024", new PharmacyProfile(
+            ["farmacia.barrio"] = ("barrio2025", new PharmacyProfile(
                 Codigo: "farmacia.barrio",
                 Nombre: "Farmacia del Barrio",
                 RadioCoberturaKm: 3.0,
                 Direccion: "Av. Santa Fe 5678, CABA",
                 Contacto: "011-4567-8902")),
-            ["farmacia.norte"] = ("norte2024", new PharmacyProfile(
+            ["farmacia.norte"] = ("norte2025", new PharmacyProfile(
                 Codigo: "farmacia.norte",
                 Nombre: "Farmacia Norte Salud",
                 RadioCoberturaKm: 6.0,

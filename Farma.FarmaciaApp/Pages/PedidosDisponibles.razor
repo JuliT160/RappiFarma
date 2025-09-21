@@ -1,4 +1,4 @@
-@page "/pedidos/disponibles"
+﻿@page "/pedidos/disponibles"
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
@@ -17,7 +17,7 @@
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudStack Spacing="1">
             <MudText Typo="Typo.h4" Style="color: white; font-weight: 700;">
-                📋 Pedidos Disponibles
+                Pedidos Disponibles
             </MudText>
             <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.9);">
                 Nuevos pedidos en tu radio de cobertura listos para cotizar
@@ -44,7 +44,7 @@
 {
     <MudStack AlignItems="AlignItems.Center" Class="mt-6">
         <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
-        <MudText Typo="Typo.body1" Class="mt-2">Buscando pedidos cercanos…</MudText>
+        <MudText Typo="Typo.body1" Class="mt-2">Buscando pedidos cercanos</MudText>
     </MudStack>
 }
 else if (_pedidos.Count == 0)
@@ -148,7 +148,7 @@ else
 
                 <MudDivider Class="my-3" />
 
-                <!-- Botones de acción mejorados -->
+                <!-- Botones de acciÃ³n mejorados -->
                 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mt-2">
                     <MudStack Row="true" Spacing="1">
                         <MudChip Color="Color.Primary" Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Material.Filled.Schedule">
@@ -172,7 +172,7 @@ else
                                    StartIcon="@Icons.Material.Filled.LocalOffer" 
                                    OnClick="@(() => CotizarPedidoAsync(pedido))"
                                    Style="border-radius: 12px; font-weight: 600; text-transform: none; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);">
-                            💰 Cotizar Pedido
+                            Cotizar Pedido
                         </MudButton>
                     </MudStack>
                 </MudStack>
@@ -223,10 +223,11 @@ else
         var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
         if (string.IsNullOrEmpty(returnUrl))
         {
-            returnUrl = "pedidos/disponibles";
+            returnUrl = "/pedidos/disponibles";
         }
 
-        Navigation.NavigateTo($"/login?returnUrl=/{returnUrl}", forceLoad: true);
+        var target = returnUrl.StartsWith("/") ? returnUrl : $"/{returnUrl}";
+        Navigation.NavigateTo($"/login?returnUrl={Uri.EscapeDataString(target)}", replace: true);
     }
 
     private async Task CotizarPedidoAsync(PharmacyOrder pedido)
@@ -286,3 +287,4 @@ else
         PedidosService.OrdersUpdated -= HandleOrdersUpdated;
     }
 }
+

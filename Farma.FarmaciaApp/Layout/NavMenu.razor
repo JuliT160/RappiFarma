@@ -2,6 +2,69 @@
 @inject Farma.FarmaciaApp.Services.PedidosService PedidosService
 @implements IDisposable
 
+<style>
+    /* Contenedor de cada link */
+    .nav-link {
+        position: relative;
+        display: block;
+        margin-bottom: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--mud-palette-textprimary);
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .nav-link:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Hover ligero */
+        .nav-link:hover {
+            background: rgba(255, 107, 53, 0.08);
+        }
+
+    /* Estado activo */
+    .nav-link-active {
+        background: var(--mud-palette-primary);
+        color: var(--mud-palette-primarycontrasttext) !important;
+    }
+
+        .nav-link-active .mud-icon-root,
+        .nav-link-active .mud-typography-root {
+            color: var(--mud-palette-primarycontrasttext) !important;
+        }
+
+    /* Badge en la esquina superior derecha del link */
+    .nav-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.75rem;
+        min-width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.75rem;
+        line-height: 1.5rem;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    /* Ajustes al header del drawer */
+    .drawer-header {
+        background: var(--mud-palette-primary);
+        color: var(--mud-palette-primarycontrasttext);
+    }
+
+        .drawer-header .mud-typography-root {
+            color: inherit;
+        }
+
+    .credential-avatar {
+        background: var(--mud-palette-secondary);
+        color: var(--mud-palette-secondarycontrasttext);
+    }
+
+</style>
+
 @if (!AuthState.IsAuthenticated)
 {
     <MudText Typo="Typo.body1" Class="pa-4">
@@ -10,54 +73,51 @@
 }
 else
 {
-    <MudDrawerHeader Class="drawer-header">
-        <MudStack Spacing="2">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                <MudAvatar Size="Size.Medium" Class="credential-avatar">
-                    <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" />
-                </MudAvatar>
-                <MudStack Spacing="0">
-                    <MudText Typo="Typo.subtitle1">@AuthState.Current?.Nombre</MudText>
-                    <MudText Typo="Typo.caption" Class="drawer-subtitle">@AuthState.Current?.Direccion</MudText>
-                </MudStack>
+    <MudDrawerHeader Class="drawer-header pa-4">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <MudAvatar Size="Size.Medium" Class="credential-avatar" Color="Color.Primary" Variant="Variant.Filled">
+                <MudIcon Icon="@Icons.Material.Filled.LocalPharmacy" Color="Color.Surface" />
+            </MudAvatar>
+            <MudStack Spacing="0">
+                <MudText Typo="Typo.subtitle1">@AuthState.Current?.Nombre</MudText>
+                <MudText Typo="Typo.caption" Class="drawer-subtitle">@AuthState.Current?.Direccion</MudText>
             </MudStack>
         </MudStack>
     </MudDrawerHeader>
 
-    <MudNavMenu Class="mt-3">
+    <MudNavMenu Class="px-2">
+        @* Pedidos Disponibles *@
         <MudNavLink Href="/pedidos/disponibles"
                     Match="NavLinkMatch.Prefix"
                     Class="nav-link"
-                    ActiveClass="nav-link nav-link-active">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                    <MudIcon Icon="@Icons.Material.Filled.Assignment" />
-                    <MudText Typo="Typo.body1">Pedidos disponibles</MudText>
-                </MudStack>
+                    ActiveClass="nav-link-active">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.Assignment" />
+                <MudText Typo="Typo.body1">Pedidos disponibles</MudText>
                 @if (_pendingCount > 0)
                 {
-                    <MudBadge Color="Color.Primary" Content="@_pendingCount" />
+                    <MudBadge Class="nav-badge" Content="@_pendingCount" />
                 }
             </MudStack>
         </MudNavLink>
 
+        @* Mis Pedidos *@
         <MudNavLink Href="/pedidos/activos"
                     Match="NavLinkMatch.Prefix"
                     Class="nav-link"
-                    ActiveClass="nav-link nav-link-active">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                    <MudIcon Icon="@Icons.Material.Filled.LocalShipping" />
-                    <MudText Typo="Typo.body1">Mis pedidos</MudText>
-                </MudStack>
+                    ActiveClass="nav-link-active">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.LocalShipping" />
+                <MudText Typo="Typo.body1">Mis pedidos</MudText>
                 @if (_activeCount > 0)
                 {
-                    <MudBadge Color="Color.Success" Content="@_activeCount" />
+                    <MudBadge Class="nav-badge" Color="Color.Success" Content="@_activeCount" />
                 }
             </MudStack>
         </MudNavLink>
     </MudNavMenu>
 }
+
 
 @code {
     private int _pendingCount;

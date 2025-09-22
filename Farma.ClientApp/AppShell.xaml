@@ -5,23 +5,45 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:farmaClientApp.Views"
     Title="RappiFarma"
-    FlyoutBehavior="Disabled">
+    FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarBackgroundColor="{StaticResource TabBarBackgroundColor}"
+    Shell.TabBarForegroundColor="{StaticResource TabBarForegroundColor}"
+    Shell.TabBarTitleColor="{StaticResource Primary}"
+    Shell.TabBarUnselectedColor="{StaticResource TabBarUnselectedColor}">
 
-    <!-- Login Page (inicial) -->
+    <!-- LOGIN (sin TabBar, sin NavBar) -->
     <ShellContent
+        Route="login"
         Shell.FlyoutBehavior="Disabled"
+        Shell.NavBarIsVisible="False"
         ContentTemplate="{DataTemplate views:ClienteLoginPage}" />
 
-    <!-- Main App con Tabs -->
-    <TabBar Route="main">
-        <Tab Title="Inicio" Icon="home.png">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:MainPage}" />
+    <!-- MAIN con Tabs -->
+    <TabBar Route="main"
+            Shell.TabBarTitleColor="{StaticResource Primary}"
+            Shell.TabBarUnselectedColor="{StaticResource TabBarUnselectedColor}">
+
+        <!-- Inicio -->
+        <Tab Title="Inicio">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xE88A;"
+                                 FontFamily="MaterialIcons"
+                                 Size="24" />
+            </Tab.Icon>
+            <ShellContent Route="home"
+                          ContentTemplate="{DataTemplate views:MainPage}" />
         </Tab>
-        <Tab Title="Mis Pedidos" Icon="package.png">
-            <ShellContent
-                ContentTemplate="{DataTemplate views:MisPedidosPage}" />
+
+        <!-- Mis Pedidos -->
+        <Tab Title="Mis Pedidos">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xe8cb;"
+                                 FontFamily="MaterialIcons"
+                                 Size="24" />
+            </Tab.Icon>
+            <ShellContent Route="orders"
+                          ContentTemplate="{DataTemplate views:MisPedidosPage}" />
         </Tab>
     </TabBar>
-
 </Shell>

@@ -4,5 +4,13 @@
       "commandName": "Project",
       "nativeDebugging": false
     }
+  },
+  "MsixPackage": {
+    "commandName": "MsixPackage",
+    "targetFramework": "net9.0-windows10.0.19041.0",
+    "msixPackagePublisher": "CN=YourPublisherName",
+    "msixPackageDisplayName": "farmaClientApp",
+    "msixPackageVersion": "1.0.0.0",
+    "applicationId": "com.jvmsoluciones.farmaclientapp"
   }
 }

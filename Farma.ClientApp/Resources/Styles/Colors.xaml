@@ -79,4 +79,9 @@
     <Color x:Key="CredentialsAccentColorLight">#FF6B35</Color>
     <Color x:Key="CredentialsAccentColorDark">#E86430</Color>
 
+    <!-- Alias especiales para Shell / TabBar -->
+    <Color x:Key="TabBarBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="TabBarForegroundColor">#111111</Color>
+    <Color x:Key="TabBarUnselectedColor">#6E6E6E</Color>
+
 </ResourceDictionary>

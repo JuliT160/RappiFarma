@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Platform;
+﻿using farmaClientApp.ViewModels;
 using farmaClientApp.Views;
-using farmaClientApp.ViewModels;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Platform;
 
 namespace farmaClientApp
 {
@@ -17,7 +18,10 @@ namespace farmaClientApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-
+            builder.ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIcons");
+            });
 
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
             {

@@ -5,60 +5,70 @@
 @inject NavigationManager Navigation
 @implements IDisposable
 
-<MudThemeProvider >
-</MudThemeProvider>
-    <MudLayout>
-        <MudDialogProvider />
-        <MudSnackbarProvider />
+<MudThemeProvider Theme="@FarmaMudTheme.Theme" />
+<MudLayout>
+    <MudDialogProvider />
+    <MudSnackbarProvider />
 
-        <MudAppBar Elevation="0" Color="Color.Surface" Class="appbar">
-            @if (AuthState.IsAuthenticated)
-            {
-                <MudIconButton Icon="@Icons.Material.Filled.Menu"
-                               Color="Color.Primary"
-                               Edge="Edge.Start"
-                               OnClick="ToggleDrawer" />
-            }
+    <MudAppBar Elevation="0" Color="Color.Surface" Class="appbar px-4">
+        <MudGrid AlignItems="Center">
+            <MudItem xs="4" Class="d-flex align-items-center">
+                @if (AuthState.IsAuthenticated)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                                   Color="Color.Primary"
+                                   Edge="Edge.Start"
+                                   OnClick="ToggleDrawer" />
+                }
+                <MudText Typo="Typo.h6" Class="ml-2">
+                    RappiFarma &bull; Portal de Farmacias
+                </MudText>
+            </MudItem>
 
-            <MudText Typo="Typo.h6" Class="appbar-title">RappiFarma &bull; Portal de Farmacias</MudText>
-            <MudSpacer />
+            <MudItem xs="4" Class="d-flex flex-column align-items-center">
+                @if (AuthState.IsAuthenticated && AuthState.Current is { } profile)
+                {
+                    <MudText Typo="Typo.subtitle1" Class="mb-0">
+                        @profile.Nombre
+                    </MudText>
+                    <MudText Typo="Typo.caption" Class="mt-0">
+                        Radio de cobertura: @profile.RadioCoberturaKm:F1 km
+                    </MudText>
+                }
+            </MudItem>
 
-            @if (AuthState.IsAuthenticated && AuthState.Current is { } profile)
-            {
-                <MudStack AlignItems="AlignItems.Center" Row="true" Spacing="2" Class="mud-width-full mud-justify-end">
-                    <MudStack Spacing="1">
-                        <MudText Typo="Typo.subtitle2">@profile.Nombre</MudText>
-                        <MudText Typo="Typo.caption" Class="appbar-subtitle">
-                            Radio de cobertura: @profile.RadioCoberturaKm:F1 km
-                        </MudText>
-                    </MudStack>
+            <MudItem xs="4" Class="d-flex justify-end">
+                @if (AuthState.IsAuthenticated)
+                {
                     <MudButton Variant="Variant.Outlined"
                                Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Logout"
                                OnClick="Logout">
-                        Cerrar sesi&oacute;n
+                        Cerrar sesión
                     </MudButton>
-                </MudStack>
-            }
-        </MudAppBar>
+                }
+            </MudItem>
+        </MudGrid>
+    </MudAppBar>
 
-        @if (AuthState.IsAuthenticated)
-        {
-            <MudDrawer @bind-Open="_drawerOpen"
-                       ClipMode="DrawerClipMode.Never"
-                       Variant="DrawerVariant.Responsive"
-                       Elevation="0"
-                       Class="app-drawer">
-                <NavMenu />
-            </MudDrawer>
-        }
 
-        <MudMainContent Class="main-content">
-            <MudContainer MaxWidth="MaxWidth.Large" Class="py-6 px-4">
-                @Body
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
+    @if (AuthState.IsAuthenticated)
+    {
+        <MudDrawer @bind-Open="_drawerOpen"
+                   ClipMode="DrawerClipMode.Never"
+                   Variant="DrawerVariant.Responsive"
+                   Elevation="0"
+                   Class="app-drawer">
+            <NavMenu />
+        </MudDrawer>
+    }
+
+    <MudMainContent Class="main-content">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="py-6 px-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 
 @code {

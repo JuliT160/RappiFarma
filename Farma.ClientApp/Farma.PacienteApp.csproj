@@ -3,21 +3,19 @@
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
 		<OutputType>Exe</OutputType>
-		<RootNamespace>farmaClientApp</RootNamespace>
+		<RootNamespace>RappiFarma</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>farmaClientApp</ApplicationTitle>
+		<ApplicationTitle>RappiFarmaClientApp</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.jvmsoluciones.farmaclientapp</ApplicationId>
+		<ApplicationId>com.jvmsoluciones.rappifarmaclientapp</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
